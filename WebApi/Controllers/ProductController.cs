@@ -44,30 +44,45 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateProd/{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] Product updatedProduct)
+        [Route("UpdateProd")]
+        public IActionResult UpdateProduct(Product p)
         {
-            if (updatedProduct == null || updatedProduct.Id != id)
-            {
-                return BadRequest("Product ID mismatch");
-            }
-
-            var existingProduct = db.products.Find(id);
-            if (existingProduct == null)
-            {
-                return NotFound("Product not found");
-            }
-
-            existingProduct.Pname = updatedProduct.Pname;
-            existingProduct.Price = updatedProduct.Price;
-            existingProduct.Pcat = updatedProduct.Pcat;
-            // Update other properties as needed
-
-            db.products.Update(existingProduct);
+            //db.Entry(p).State = EntityState.Modified;
+            db.products.Update(p);
             db.SaveChanges();
+            return Ok("Products Added Successfully");
 
-            return Ok("Product updated successfully");
+
         }
+
+        //[HttpPut]
+        //[Route("UpdateProd/{id}")]
+        //public IActionResult UpdateProduct(int id, [FromBody] Product updatedProduct)
+        //{
+        //    if (updatedProduct == null || updatedProduct.Id != id)
+        //    {
+        //        return BadRequest("Product ID mismatch");
+        //    }
+
+        //    var existingProduct = db.products.Find(id);
+        //    if (existingProduct == null)
+        //    {
+        //        return NotFound("Product not found");
+        //    }
+
+        //    existingProduct.Pname = updatedProduct.Pname;
+        //    existingProduct.Price = updatedProduct.Price;
+        //    existingProduct.Pcat = updatedProduct.Pcat;
+        //    // Update other properties as needed
+
+        //    db.products.Update(existingProduct);
+        //    db.SaveChanges();
+
+        //    return Ok("Product updated successfully");
+        //}
+
+
+
             [HttpGet]
             [Route("GetProdByName/{name}")]
             public IActionResult GetProductByName(string name)
@@ -113,6 +128,19 @@ namespace WebApi.Controllers
             db.SaveChanges();
 
             return Ok("Products deleted successfully");
+        }
+        [HttpGet]
+        [Route("GetProdById/{id}")]
+        public IActionResult GetProductById(int id)
+        {
+            var product = db.products.FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound("Product not found");
+            }
+
+            return Ok(product);
         }
     }
 }
