@@ -17,6 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 ));
 
+var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadPath))
+{
+    Directory.CreateDirectory(uploadPath);
+}
 
 // Add logging
 builder.Logging.ClearProviders();

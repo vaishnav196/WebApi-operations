@@ -6,6 +6,7 @@
         public string Pname { get; set; }    
          public string Pcat {  get; set; }  
 
-        public string Price {  get; set; }  
+        public string Price {  get; set; }
+        public string ImagePath { get; set; }
     }
 }
