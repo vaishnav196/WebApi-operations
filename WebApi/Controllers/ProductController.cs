@@ -42,18 +42,47 @@ namespace WebApi.Controllers
             db.SaveChanges();   
             return Ok("Product deleted successfully");
         }
-
         [HttpPut]
         [Route("UpdateProd")]
         public IActionResult UpdateProduct(Product p)
         {
-            //db.Entry(p).State = EntityState.Modified;
-            db.products.Update(p);
+            if (p == null || p.Id <= 0)
+            {
+                return BadRequest("Invalid product data.");
+            }
+
+            var existingProduct = db.products.Find(p.Id);
+            if (existingProduct == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            existingProduct.Pname = p.Pname;
+            existingProduct.Price = p.Price;
+            existingProduct.Pcat = p.Pcat;
+            existingProduct.ImagePath = p.ImagePath;
+            // Update other properties as needed
+
+            db.products.Update(existingProduct);
             db.SaveChanges();
-            return Ok("Products Added Successfully");
 
-
+            return Ok("Product updated successfully");
         }
+
+
+
+
+        //[HttpPut]
+        //[Route("UpdateProd")]
+        //public IActionResult UpdateProduct(Product p)
+        //{
+        //    //db.Entry(p).State = EntityState.Modified;
+        //    db.products.Update(p);
+        //    db.SaveChanges();
+        //    return Ok("Products Added Successfully");
+
+
+        //}
 
         //[HttpPut]
         //[Route("UpdateProd/{id}")]
@@ -83,7 +112,7 @@ namespace WebApi.Controllers
 
 
 
-            [HttpGet]
+        [HttpGet]
             [Route("GetProdByName/{name}")]
             public IActionResult GetProductByName(string name)
             {
@@ -129,6 +158,9 @@ namespace WebApi.Controllers
 
             return Ok("Products deleted successfully");
         }
+
+
+
         [HttpGet]
         [Route("GetProdById/{id}")]
         public IActionResult GetProductById(int id)
